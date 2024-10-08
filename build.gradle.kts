@@ -10,11 +10,17 @@ plugins {
     alias(libs.plugins.kotlinMultiplatform) apply false
     alias(libs.plugins.kotlinAndroid) apply false
     alias(libs.plugins.detekt)
+    alias(libs.plugins.jetbrainsKotlinJvm) apply false
+}
+
+dependencies {
+    detektPlugins(project(":detekt"))
 }
 
 detekt {
     buildUponDefaultConfig = true
     config.setFrom(file("$rootDir/config/detekt/detekt.yml"))
+//    config.setFrom(file("$rootDir/detekt/src/main/resources/config/config.yml"))
     source.setFrom(
         "$rootDir/app-wearos",
         "$rootDir/app-wasm",
@@ -22,6 +28,7 @@ detekt {
         "$rootDir/core",
     )
 }
+tasks.withType<Detekt> { dependsOn(":detekt:assemble") }
 
 tasks.withType<Detekt>().configureEach {
     reports {
