@@ -3,32 +3,46 @@ package io.github.kabos.bus.detekt
 import io.gitlab.arturbosch.detekt.api.Config
 import io.gitlab.arturbosch.detekt.rules.KotlinCoreEnvironmentTest
 import io.gitlab.arturbosch.detekt.test.compileAndLintWithContext
-import io.kotest.matchers.collections.shouldHaveSize
 import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCoreEnvironment
 import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
 
+@Suppress("NonAsciiCharacters")
 @KotlinCoreEnvironmentTest
 internal class RepositorySuspendRuleTest(private val env: KotlinCoreEnvironment) {
 
     @Test
-    fun `reports inner classes`() {
+    fun `公開された関数がsuspendになっている場合、Issueを検知しない`() {
         val code = """
-        class A {
-          inner class B
+        class FooRepository {
+            suspend fun get() {
+                // suspendなのでok
+            }
+
+            private fun save() {
+                // privateなのでsuspendがなくてもok
+            }
         }
-        """
-        val findings = RepositorySuspendRule(Config.empty).compileAndLintWithContext(env, code)
-        findings shouldHaveSize 1
+        """.trim()
+        val result = RepositorySuspendRule(Config.empty).compileAndLintWithContext(env, code)
+        assertEquals(0, result.size)
     }
 
+
     @Test
-    fun `doesn't report inner classes`() {
+    fun `公開された関数がsuspendになっていない場合、Issueを検知する`() {
         val code = """
-        class A {
-          class B
+        class FooRepository : Repository {
+            fun get() {
+                // suspendになっていないのでNG
+            }
+
+            overrider fun save() {
+                // suspendになっていないのでNG
+            }
         }
-        """
-        val findings = RepositorySuspendRule(Config.empty).compileAndLintWithContext(env, code)
-        findings shouldHaveSize 0
+        """.trim()
+        val result = RepositorySuspendRule(Config.empty).compileAndLintWithContext(env, code)
+        assertEquals(2, result.size)
     }
 }
