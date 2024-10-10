@@ -1,1 +1,1 @@
-io.github.kabos.bus.detekt.MyRuleSetProvider.kt
+io.github.kabos.bus.detekt.BusRuleSetProvider

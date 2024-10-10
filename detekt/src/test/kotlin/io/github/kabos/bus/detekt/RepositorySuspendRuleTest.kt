@@ -8,7 +8,7 @@ import org.jetbrains.kotlin.cli.jvm.compiler.KotlinCoreEnvironment
 import org.junit.jupiter.api.Test
 
 @KotlinCoreEnvironmentTest
-internal class MyRuleTest(private val env: KotlinCoreEnvironment) {
+internal class RepositorySuspendRuleTest(private val env: KotlinCoreEnvironment) {
 
     @Test
     fun `reports inner classes`() {
@@ -17,7 +17,7 @@ internal class MyRuleTest(private val env: KotlinCoreEnvironment) {
           inner class B
         }
         """
-        val findings = MyRule(Config.empty).compileAndLintWithContext(env, code)
+        val findings = RepositorySuspendRule(Config.empty).compileAndLintWithContext(env, code)
         findings shouldHaveSize 1
     }
 
@@ -28,7 +28,7 @@ internal class MyRuleTest(private val env: KotlinCoreEnvironment) {
           class B
         }
         """
-        val findings = MyRule(Config.empty).compileAndLintWithContext(env, code)
+        val findings = RepositorySuspendRule(Config.empty).compileAndLintWithContext(env, code)
         findings shouldHaveSize 0
     }
 }
