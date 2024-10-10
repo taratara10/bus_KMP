@@ -1,3 +1,7 @@
+bus-rule:
+  RepositorySuspendRule:
+    active: true
+
 build:
   maxIssues: 10
   excludeCorrectable: false

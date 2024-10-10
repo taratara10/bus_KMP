@@ -19,8 +19,7 @@ dependencies {
 
 detekt {
     buildUponDefaultConfig = true
-    config.setFrom(file("$rootDir/config/detekt/detekt.yml"))
-//    config.setFrom(file("$rootDir/detekt/src/main/resources/config/config.yml"))
+    config.setFrom(file("$rootDir/detekt/src/main/resources/config/detekt.yml"))
     source.setFrom(
         "$rootDir/app-wearos",
         "$rootDir/app-wasm",
